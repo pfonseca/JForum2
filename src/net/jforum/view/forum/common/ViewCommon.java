@@ -117,7 +117,13 @@ public final class ViewCommon
 		JForumExecutionContext.getTemplateContext().put("returnPath", returnPath);
 		
 		if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
-			String redirect = SystemGlobals.getValue(ConfigKeys.SSO_REDIRECT);
+			
+			String redirect = System.getProperty("authentication.url");
+			
+			if(StringUtils.isEmpty(redirect)){
+				redirect = SystemGlobals.getValue(ConfigKeys.SSO_REDIRECT);
+			}
+			
 			
 			if (!StringUtils.isEmpty(redirect)) {
 				URI redirectUri = URI.create(redirect);
@@ -178,6 +184,7 @@ public final class ViewCommon
 	 */
 	public static String getForumLink()
 	{
+		
 		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
 		
 		if (forumLink.charAt(forumLink.length() - 1) != '/') {

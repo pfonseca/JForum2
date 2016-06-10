@@ -5,7 +5,6 @@ import javax.servlet.http.Cookie;
 import org.apache.log4j.Logger;
 
 import net.jforum.ControllerUtils;
-import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
 import net.jforum.entities.UserSession;
 import net.jforum.util.preferences.ConfigKeys;
@@ -37,17 +36,17 @@ public class AmbrosiaUserSSO implements SSO {
         if (SSOCookie != null) remoteUser = SSOCookie.getValue(); //jforum username
          
         // user has since logged out
-        if(remoteUser == null && userSession.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+        if(remoteUser == null) {
             return false;
-             
             // user has since logged in
+            
         } else if(remoteUser != null && userSession.getUserId() == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
             return false;
         }
             // user has changed user
-//        } else if(remoteUser != null && !remoteUser.equals(userSession.getUsername())) {
-//            return false;
-//        }
+        else if(remoteUser != null && !remoteUser.equals(userSession.getUsername())) {
+            return false;
+        }
         
         return true; // incorrect in cvs RemoteUserSSO.java
     }

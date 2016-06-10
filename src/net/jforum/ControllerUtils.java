@@ -65,6 +65,7 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
@@ -223,7 +224,7 @@ public class ControllerUtils
 			String username = sso.authenticateUser(JForumExecutionContext.getRequest());
 
 			if (username == null || username.trim().equals("")) {
-				userSession.makeAnonymous();
+				ViewCommon.contextToLogin();
 			}
 			else {
 				SSOUtils utils = new SSOUtils();
@@ -232,6 +233,11 @@ public class ControllerUtils
 					SessionContext session = JForumExecutionContext.getRequest().getSessionContext();
 
 					String email = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_EMAIL_ATTRIBUTE));
+					
+					if(email == null){
+						email = JForumExecutionContext.getRequest().getParameter(SystemGlobals.getValue(ConfigKeys.SSO_EMAIL_ATTRIBUTE));
+					}
+					
 					String password = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_PASSWORD_ATTRIBUTE));
 
 					if (email == null) {
